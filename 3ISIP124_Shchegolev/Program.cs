@@ -85,6 +85,30 @@
                         Wait();
                   break;
 
+                    case 3:
+                        Console.Clear();
+                        for (int i = 0; i < shoppingListPrice.Count; i++)
+                        {
+                            for (int j = shoppingListPrice.Count - 1; j > i; j--)
+                            {
+                                if (shoppingListPrice[j - 1] > shoppingListPrice[j])
+                                {
+                                    int a = shoppingListPrice[j];
+                                    string b = shoppingListName[j];
+                                    shoppingListPrice[j] = shoppingListPrice[j - 1];
+                                    shoppingListName[j] = shoppingListName[j-1];
+                                    shoppingListPrice[j - 1] = a;
+                                    shoppingListName[j-1] = b;
+                                }
+                            }
+                        }
+                        for (int i = 0; i < shoppingListPrice.Count; i++)
+                        {
+                            Console.WriteLine($"{shoppingListName[i]} - {shoppingListPrice[i]}");
+                        }
+                        Wait();
+                    break;
+
                     default:
                         continue;
                 }
