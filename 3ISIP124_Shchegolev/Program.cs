@@ -36,6 +36,40 @@
                 }
 
             }
+
+            while (true)
+            {
+                Console.Clear();
+                int chose;
+                Console.Write("1. Вывод данных\n2. Статистика (среднее, максимальное, минимальное, сумма)\n3. Сортировка по цене \n4. Конвертация валюты\n5. Поиск по названию \n0. Выход\n\nВыбор: ");
+                bool correct = int.TryParse(Console.ReadLine(), out chose);
+                
+                if (!correct)
+                    continue;
+
+                switch(chose)
+                {
+                    case 0:
+                        return;
+
+                    case 1:
+                        Console.Clear();
+                        for (int i = 0; i < shoppingListName.Count; i++)
+                        {
+                            Console.WriteLine($"{i+1}) {shoppingListName[i]} - {shoppingListPrice[i]}");
+                        }
+                        Console.ForegroundColor = ConsoleColor.DarkGray;
+                        Console.WriteLine("Для продолжения нажмите на кнопку...");
+                        Console.ResetColor();
+                        Console.ReadKey();
+                    break;
+
+                    default:
+                        continue;
+                }
+            }
+
+
         }
     }
 }
