@@ -29,9 +29,7 @@
                 }
                 catch (Exception)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.Write("Неккоректный ввод!");
-                    Console.ResetColor();
+                    Wait();
                     continue;
                 }
 
@@ -64,12 +62,43 @@
                         Console.ReadKey();
                     break;
 
+                    case 2:
+                        Console.Clear();
+                        int max = 0;
+                        int min = int.MaxValue;
+                        int sum = 0;
+                        double average;
+
+                        for (int i = 0; i < shoppingListPrice.Count; i++)
+                        {
+                            if (shoppingListPrice[i] > max)
+                                max = shoppingListPrice[i];
+
+                            if (shoppingListPrice[i] < min)
+                                min = shoppingListPrice[i];
+
+                            sum += shoppingListPrice[i];
+                        }
+                        average = sum / shoppingListPrice.Count;
+
+                        Console.WriteLine($"\nМаксимальная сумма: {max}\nМинимальная сумма: {min}\nСредняя сумма: {average}");
+                        Wait();
+                  break;
+
                     default:
                         continue;
                 }
             }
 
 
+        }
+
+        static void Wait()
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine("Для продолжения нажмите на кнопку...");
+            Console.ResetColor();
+            Console.ReadKey();
         }
     }
 }
