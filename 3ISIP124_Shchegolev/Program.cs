@@ -1,10 +1,13 @@
-﻿namespace _3ISIP124_Shchegolev
+﻿using System.Globalization;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+
+namespace _3ISIP124_Shchegolev
 {
     internal class Program
     {
         static int count = 1;
         static List<string> shoppingListName = new List<string>();
-        static List<int> shoppingListPrice = new List<int>();
+        static List<double> shoppingListPrice = new List<double>();
         static void Main(string[] args)
         {
             Console.WriteLine("Введите траты в формате (название товара или услуги; цена).");
@@ -64,9 +67,9 @@
 
                     case 2:
                         Console.Clear();
-                        int max = 0;
-                        int min = int.MaxValue;
-                        int sum = 0;
+                        double max = 0;
+                        double min = double.MaxValue;
+                        double sum = 0;
                         double average;
 
                         for (int i = 0; i < shoppingListPrice.Count; i++)
@@ -93,7 +96,7 @@
                             {
                                 if (shoppingListPrice[j - 1] > shoppingListPrice[j])
                                 {
-                                    int a = shoppingListPrice[j];
+                                    double a = shoppingListPrice[j];
                                     string b = shoppingListName[j];
                                     shoppingListPrice[j] = shoppingListPrice[j - 1];
                                     shoppingListName[j] = shoppingListName[j-1];
@@ -108,6 +111,73 @@
                         }
                         Wait();
                     break;
+
+                    case 4:
+                        
+                        while(true)
+                        {
+                            Console.Clear();
+                            Console.WriteLine("Введите курс");
+                            Console.ForegroundColor = ConsoleColor.DarkGray;
+                            Console.WriteLine("( при вводе '100' будет считаться, что указанная раннее 1 валюта (с) равна 100 новой валюты (н) )\n");
+                            Console.ResetColor();
+
+                            try
+                            {
+                                Console.Write("Курс: ");
+                                double curse = Convert.ToDouble(Console.ReadLine());
+
+                                if (curse > 0)
+                                {
+                                    Console.Clear();
+                                    Console.WriteLine($"Курс: {curse} н = 1 с");
+                                    Console.WriteLine("\nПодтвердить конвертацию?\n1) Да\n2) Нет");
+                                    Console.Write("Выбор: ");
+                                    int chose1 = Convert.ToInt32(Console.ReadLine());
+                                    switch (chose1)
+                                    {
+                                        case 1:
+                                            for (int i = 0;i < shoppingListPrice.Count; i++)
+                                            {
+                                                shoppingListPrice[i] = shoppingListPrice[i] * curse;
+                                            }
+                                            break;
+
+                                        default:
+                                            continue;
+                                    }
+                                    break;
+                                }
+
+                                if (curse <= 0)
+                                {
+                                    Console.ForegroundColor = ConsoleColor.Red;
+                                    Console.WriteLine("Курс не может быть отрицательным или нулевым.");
+                                    Console.ResetColor();
+                                    Wait();
+                                    continue;
+                                }
+
+                                if (curse == 0)
+                                {
+                                    break;
+                                }
+
+                            }
+                            catch (Exception)
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("Некорректный ввод"); Console.ResetColor();
+
+                                Wait();
+
+                                continue;
+                            }
+                            
+                        }
+                        
+
+
+                        break;
 
                     default:
                         continue;
