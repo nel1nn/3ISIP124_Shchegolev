@@ -30,12 +30,12 @@ namespace _3ISIP124_Shchegolev
 
                     count++;
                 }
+
                 catch (Exception)
                 {
                     Wait();
                     continue;
                 }
-
             }
 
             while (true)
@@ -51,7 +51,7 @@ namespace _3ISIP124_Shchegolev
                 switch(chose)
                 {
                     case 0:
-                        return;
+                    return;
 
                     case 1:
                         Console.Clear();
@@ -125,12 +125,12 @@ namespace _3ISIP124_Shchegolev
                             try
                             {
                                 Console.Write("Курс: ");
-                                double curse = Convert.ToDouble(Console.ReadLine());
+                                double rate = Convert.ToDouble(Console.ReadLine());
 
-                                if (curse > 0)
+                                if (rate > 0)
                                 {
                                     Console.Clear();
-                                    Console.WriteLine($"Курс: {curse} н = 1 с");
+                                    Console.WriteLine($"Курс: {rate} н = 1 с");
                                     Console.WriteLine("\nПодтвердить конвертацию?\n1) Да\n2) Нет");
                                     Console.Write("Выбор: ");
                                     int chose1 = Convert.ToInt32(Console.ReadLine());
@@ -139,7 +139,7 @@ namespace _3ISIP124_Shchegolev
                                         case 1:
                                             for (int i = 0;i < shoppingListPrice.Count; i++)
                                             {
-                                                shoppingListPrice[i] = shoppingListPrice[i] * curse;
+                                                shoppingListPrice[i] = shoppingListPrice[i] * rate;
                                             }
                                             break;
 
@@ -149,7 +149,7 @@ namespace _3ISIP124_Shchegolev
                                     break;
                                 }
 
-                                if (curse <= 0)
+                                if (rate <= 0)
                                 {
                                     Console.ForegroundColor = ConsoleColor.Red;
                                     Console.WriteLine("Курс не может быть отрицательным или нулевым.");
@@ -158,7 +158,7 @@ namespace _3ISIP124_Shchegolev
                                     continue;
                                 }
 
-                                if (curse == 0)
+                                if (rate == 0)
                                 {
                                     break;
                                 }
@@ -174,10 +174,12 @@ namespace _3ISIP124_Shchegolev
                             }
                             
                         }
-                        
-
 
                         break;
+
+                    case 5:
+                        Finder();
+                break;
 
                     default:
                         continue;
@@ -193,6 +195,81 @@ namespace _3ISIP124_Shchegolev
             Console.WriteLine("Для продолжения нажмите на кнопку...");
             Console.ResetColor();
             Console.ReadKey();
+        }
+
+        static void Finder()
+        {
+            Console.Clear();
+            char[] searching = new char[20];
+            int pointer = 0;
+            const int cursorPos = 7;
+
+            while (true)
+            {
+                Console.Clear();
+                Console.Write($"Поиск: {new string(searching)}");
+
+                Console.WriteLine($"\n\nРезультат:");
+                if (pointer > 0)
+                {
+                    for (int i = 0; i < shoppingListName.Count; i++)
+                    {
+                        string searchingword = new string(searching);
+
+                        if (shoppingListName[i].Contains(searchingword.Substring(0, pointer)))
+                        {
+                            char[] word = shoppingListName[i].ToCharArray();
+
+                            for (int k = 0; k < word.Length; k++)
+                            {
+                                for (int j = 0; j < searching.Length; j++)
+                                {
+                                    if (word[k] == searchingword[j])
+                                    {
+                                        Console.ForegroundColor = ConsoleColor.Green;
+                                    }
+                                }
+                                Console.Write(word[k]);
+                                Console.ResetColor();
+                            }
+                            Console.WriteLine();
+                        }
+
+                    }
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.DarkGray;
+                    Console.WriteLine("\nОжидание ввода...");
+                    Console.ResetColor();
+                }
+
+
+                Console.SetCursorPosition(cursorPos + pointer, 0);
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+
+                switch (keyInfo.Key)
+                {
+                    case ConsoleKey.Backspace:
+                        if (pointer > 0)
+                        {
+                            pointer--;
+                            searching[pointer] = '\0';
+                        }
+                        break;
+
+                    case ConsoleKey.Enter:
+                        return;
+
+                    default:
+                        if (!char.IsControl(keyInfo.KeyChar))
+                        {
+                            searching[pointer] = keyInfo.KeyChar;
+                            pointer++;
+                        }
+                        break;
+                }
+            }
         }
     }
 }
