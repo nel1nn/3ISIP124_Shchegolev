@@ -34,6 +34,32 @@
         }
     }
 
+    public class Store
+    {
+        private readonly List<Product> _products = new();
+        private int _nextId = 1;
+
+        public Store()
+        {
+            SeedInitialData();
+        }
+
+        // Метод генерации следующего ID (гарантирует старт с 1 и уникальность)
+        private int GenerateId() => _nextId++;
+
+        private void SeedInitialData()
+        {
+            _products.Add(new Product(GenerateId(), "Наушники Sony", 8990.00m, 12, ProductCategory.Electronics));
+            _products.Add(new Product(GenerateId(), "Кофе в зернах 1кг", 1450.50m, 25, ProductCategory.Groceries));
+            _products.Add(new Product(GenerateId(), "Худи оверсайз", 3200.00m, 0, ProductCategory.Clothing));
+            _products.Add(new Product(GenerateId(), "Чистый код (Р. Мартин)", 1850.00m, 7, ProductCategory.Books));
+            _products.Add(new Product(GenerateId(), "Механическая клавиатура", 6490.99m, 4, ProductCategory.Electronics));
+        }
+
+        // Возвращаем копию списка для безопасного чтения
+        public IReadOnlyList<Product> GetAllProducts() => _products.AsReadOnly();
+    }
+
     internal class Program
     {
         static void Main(string[] args)
