@@ -44,7 +44,6 @@
             SeedInitialData();
         }
 
-        // Метод генерации следующего ID (гарантирует старт с 1 и уникальность)
         private int GenerateId() => _nextId++;
 
         private void SeedInitialData()
@@ -56,8 +55,72 @@
             _products.Add(new Product(GenerateId(), "Механическая клавиатура", 6490.99m, 4, ProductCategory.Electronics));
         }
 
-        // Возвращаем копию списка для безопасного чтения
         public IReadOnlyList<Product> GetAllProducts() => _products.AsReadOnly();
+
+        public Product AddProduct(string name, decimal price, int quantity, ProductCategory category)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("Название товара не может быть пустым.");
+
+            if (price <= 0)
+                throw new ArgumentException("Цена должна быть строго больше нуля.");
+
+            if (quantity < 0)
+                throw new ArgumentException("Количество не может быть отрицательным.");
+
+            var product = new Product(GenerateId(), name.Trim(), price, quantity, category);
+            _products.Add(product);
+            return product;
+        }
+
+        public bool RemoveProduct(int id)
+        {
+            var product = _products.FirstOrDefault(p => p.Id == id);
+            if (product is null)
+                return false;
+
+            return _products.Remove(product);
+        }
+
+        public bool RestockProduct(int id, int amount)
+        {
+            if (amount <= 0)
+                throw new ArgumentException("Количество поставки должно быть больше нуля.");
+
+            var product = _products.FirstOrDefault(p => p.Id == id);
+            if (product is null)
+                return false;
+
+            product.Quantity += amount;
+            return true;
+        }
+
+        public bool SellProduct(int id, int amount, out string errorMessage)
+        {
+            errorMessage = string.Empty;
+
+            if (amount <= 0)
+            {
+                errorMessage = "Количество для продажи должно быть больше нуля.";
+                return false;
+            }
+
+            var product = _products.FirstOrDefault(p => p.Id == id);
+            if (product is null)
+            {
+                errorMessage = $"Товар с кодом {id} не найден.";
+                return false;
+            }
+
+            if (product.Quantity < amount)
+            {
+                errorMessage = $"Недостаточно товара на складе. В наличии: {product.Quantity} шт., запрошено: {amount} шт.";
+                return false;
+            }
+
+            product.Quantity -= amount;
+            return true;
+        }
     }
 
     internal class Program
