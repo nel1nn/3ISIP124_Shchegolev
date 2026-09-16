@@ -121,6 +121,32 @@
             product.Quantity -= amount;
             return true;
         }
+
+        // Поиск по точному коду (ID)
+        public Product? FindById(int id)
+        {
+            return _products.FirstOrDefault(p => p.Id == id);
+        }
+
+        // Поиск по названию (частичное совпадение без учета регистра)
+        public List<Product> FindByName(string namePart)
+        {
+            if (string.IsNullOrWhiteSpace(namePart))
+                return new List<Product>();
+
+            return _products
+                .Where(p => p.Name.Contains(namePart.Trim(), StringComparison.OrdinalIgnoreCase))
+                .ToList();
+        }
+
+        // Поиск по категории
+        public List<Product> FindByCategory(ProductCategory category)
+        {
+            return _products
+                .Where(p => p.Category == category)
+                .ToList();
+        }
+
     }
 
     internal class Program
