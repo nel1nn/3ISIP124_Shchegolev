@@ -31,10 +31,22 @@ namespace practice_2
             Category = category;
         }
 
+        public string GetCategoryDisplayName()
+        {
+            return Category switch
+            {
+                ProductCategory.Electronics => "Электроника",
+                ProductCategory.Groceries => "Продукты",
+                ProductCategory.Clothing => "Одежда",
+                ProductCategory.Books => "Книги",
+                _ => Category.ToString()
+            };
+        }
+
         public override string ToString()
         {
-            string stockStatus = IsInStock ? $"Да ({Quantity} шт.)" : "Нет в наличии";
-            return $"[ID: {Id}] {Name} | Категория: {Category} | Цена: {Price:C2} | Остаток: {stockStatus}";
+            string stock = IsInStock ? "да" : "нет";
+            return $"{Id}) {Name} {Quantity}шт - {Price:0.##}р | {GetCategoryDisplayName()} | На складе: {stock}";
         }
     }
 
@@ -52,11 +64,11 @@ namespace practice_2
 
         private void SeedInitialData()
         {
-            _products.Add(new Product(GenerateId(), "Наушники Sony", 8990.00m, 12, ProductCategory.Electronics));
-            _products.Add(new Product(GenerateId(), "Кофе в зернах 1кг", 1450.50m, 25, ProductCategory.Groceries));
-            _products.Add(new Product(GenerateId(), "Худи оверсайз", 3200.00m, 0, ProductCategory.Clothing));
-            _products.Add(new Product(GenerateId(), "Чистый код (Р. Мартин)", 1850.00m, 7, ProductCategory.Books));
-            _products.Add(new Product(GenerateId(), "Механическая клавиатура", 6490.99m, 4, ProductCategory.Electronics));
+            _products.Add(new Product(GenerateId(), "Наушники Sony", 8990m, 12, ProductCategory.Electronics));
+            _products.Add(new Product(GenerateId(), "Кофе в зернах 1кг", 1450m, 25, ProductCategory.Groceries));
+            _products.Add(new Product(GenerateId(), "Худи оверсайз", 3200m, 0, ProductCategory.Clothing));
+            _products.Add(new Product(GenerateId(), "Чистый код (Р. Мартин)", 1850m, 7, ProductCategory.Books));
+            _products.Add(new Product(GenerateId(), "Механическая клавиатура", 6490m, 4, ProductCategory.Electronics));
         }
 
         public IReadOnlyList<Product> GetAllProducts() => _products.AsReadOnly();
@@ -67,7 +79,7 @@ namespace practice_2
                 throw new ArgumentException("Название товара не может быть пустым.");
 
             if (price <= 0)
-                throw new ArgumentException("Цена должна быть строго больше нуля.");
+                throw new ArgumentException("Цена должна быть больше нуля.");
 
             if (quantity < 0)
                 throw new ArgumentException("Количество не может быть отрицательным.");
@@ -118,7 +130,7 @@ namespace practice_2
 
             if (product.Quantity < amount)
             {
-                errorMessage = $"Недостаточно товара на складе. В наличии: {product.Quantity} шт., запрошено: {amount} шт.";
+                errorMessage = $"Недостаточно на складе. В наличии: {product.Quantity}шт, запрошено: {amount}шт.";
                 return false;
             }
 
@@ -161,18 +173,19 @@ namespace practice_2
             while (running)
             {
                 Console.Clear();
-                Console.WriteLine("=== УЧЁТ ТОВАРОВ В МАГАЗИНЕ ===");
+                Console.WriteLine("Учет товаров в магазине");
+                Console.WriteLine("-----------------------");
                 Console.WriteLine("1. Показать все товары");
                 Console.WriteLine("2. Добавить товар");
                 Console.WriteLine("3. Удалить товар");
-                Console.WriteLine("4. Заказать поставку товара");
+                Console.WriteLine("4. Заказать поставку");
                 Console.WriteLine("5. Продать товар");
                 Console.WriteLine("6. Поиск товара");
                 Console.WriteLine("0. Выход");
-                Console.Write("\nВыберите действие: ");
+                Console.WriteLine("-----------------------");
+                Console.Write("Действие: ");
 
                 string? choice = Console.ReadLine();
-                Console.WriteLine();
 
                 switch (choice)
                 {
@@ -196,124 +209,107 @@ namespace practice_2
                         break;
                     case "0":
                         running = false;
-                        Console.WriteLine("Работа программы завершена.");
                         continue;
                     default:
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.WriteLine("Неизвестный пункт меню. Попробуйте снова.");
-                        Console.ResetColor();
+                        Console.WriteLine("\nНеверный пункт.");
                         break;
                 }
 
-                Console.WriteLine("\nНажмите любую клавишу для продолжения...");
-                Console.ReadKey();
+                Pause();
             }
         }
 
         private static void ShowAllProducts()
         {
-            var products = Store.GetAllProducts();
-            PrintProductTable(products);
+            Console.Clear();
+            Console.WriteLine("Список товаров:");
+            Console.WriteLine();
+            PrintProducts(Store.GetAllProducts());
         }
 
         private static void AddProductView()
         {
-            Console.WriteLine("--- Добавление нового товара ---");
+            Console.Clear();
+            Console.WriteLine("Добавление товара");
+            Console.WriteLine("-----------------");
 
             string name;
             while (true)
             {
-                Console.Write("Введите название товара: ");
+                Console.Write("Название: ");
                 name = Console.ReadLine() ?? string.Empty;
                 if (!string.IsNullOrWhiteSpace(name))
                     break;
-                Console.WriteLine("Ошибка: название не может быть пустым.");
+                Console.WriteLine("Название не может быть пустым.");
             }
 
-            decimal price = ReadPositiveDecimal("Введите цену (руб): ");
-            int quantity = ReadNonNegativeInt("Введите начальное количество: ");
+            decimal price = ReadPositiveDecimal("Цена (руб): ");
+            int quantity = ReadNonNegativeInt("Количество: ");
             ProductCategory category = ChooseCategory();
 
             try
             {
                 var created = Store.AddProduct(name, price, quantity, category);
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"\nТовар успешно добавлен! Присвоен код (ID): {created.Id}");
-                Console.ResetColor();
+                Console.WriteLine($"\nУспешно добавлен:\n{created}");
             }
             catch (Exception ex)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Ошибка при добавлении: {ex.Message}");
-                Console.ResetColor();
+                Console.WriteLine($"\nОшибка: {ex.Message}");
             }
         }
 
         private static void RemoveProductView()
         {
-            Console.WriteLine("--- Удаление товара ---");
-            int id = ReadPositiveInt("Введите код (ID) товара для удаления: ");
+            Console.Clear();
+            Console.WriteLine("Удаление товара");
+            Console.WriteLine("---------------");
 
-            bool removed = Store.RemoveProduct(id);
-            if (removed)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Товар с кодом {id} успешно удалён.");
-            }
+            int id = ReadPositiveInt("Код товара: ");
+            if (Store.RemoveProduct(id))
+                Console.WriteLine($"\nТовар {id} удален.");
             else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Товар с кодом {id} не найден.");
-            }
-            Console.ResetColor();
+                Console.WriteLine($"\nТовар {id} не найден.");
         }
 
         private static void RestockProductView()
         {
-            Console.WriteLine("--- Заказ поставки ---");
-            int id = ReadPositiveInt("Введите код (ID) товара: ");
-            int amount = ReadPositiveInt("Введите количество для поставки: ");
+            Console.Clear();
+            Console.WriteLine("Поставка товара");
+            Console.WriteLine("---------------");
 
-            bool updated = Store.RestockProduct(id, amount);
-            if (updated)
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Поставка принята. Остаток обновлён.");
-            }
+            int id = ReadPositiveInt("Код товара: ");
+            int amount = ReadPositiveInt("Количество поставки: ");
+
+            if (Store.RestockProduct(id, amount))
+                Console.WriteLine($"\nПоставка принята. Остаток обновлен.");
             else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Товар с кодом {id} не найден.");
-            }
-            Console.ResetColor();
+                Console.WriteLine($"\nТовар с кодом {id} не найден.");
         }
 
         private static void SellProductView()
         {
-            Console.WriteLine("--- Продажа товара ---");
-            int id = ReadPositiveInt("Введите код (ID) товара: ");
-            int amount = ReadPositiveInt("Введите количество для продажи: ");
+            Console.Clear();
+            Console.WriteLine("Продажа товара");
+            Console.WriteLine("--------------");
+
+            int id = ReadPositiveInt("Код товара: ");
+            int amount = ReadPositiveInt("Количество для продажи: ");
 
             if (Store.SellProduct(id, amount, out string errorMessage))
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine($"Продажа оформлена. Списано {amount} шт.");
-            }
+                Console.WriteLine($"\nПродажа выполнена: списано {amount}шт.");
             else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"Ошибка продажи: {errorMessage}");
-            }
-            Console.ResetColor();
+                Console.WriteLine($"\nОшибка: {errorMessage}");
         }
 
         private static void SearchProductView()
         {
-            Console.WriteLine("--- Поиск товаров ---");
-            Console.WriteLine("1. По коду (ID)");
+            Console.Clear();
+            Console.WriteLine("Поиск товара");
+            Console.WriteLine("------------");
+            Console.WriteLine("1. По коду");
             Console.WriteLine("2. По названию");
             Console.WriteLine("3. По категории");
-            Console.Write("Выберите критерий поиска: ");
+            Console.Write("Критерий: ");
 
             string? criteria = Console.ReadLine();
             List<Product> results = new();
@@ -321,13 +317,13 @@ namespace practice_2
             switch (criteria)
             {
                 case "1":
-                    int id = ReadPositiveInt("Введите код товара: ");
+                    int id = ReadPositiveInt("Код: ");
                     var product = Store.FindById(id);
                     if (product is not null)
                         results.Add(product);
                     break;
                 case "2":
-                    Console.Write("Введите фрагмент названия: ");
+                    Console.Write("Фрагмент названия: ");
                     string term = Console.ReadLine() ?? string.Empty;
                     results = Store.FindByName(term);
                     break;
@@ -336,32 +332,32 @@ namespace practice_2
                     results = Store.FindByCategory(category);
                     break;
                 default:
-                    Console.WriteLine("Неверный критерий поиска.");
+                    Console.WriteLine("\nНеверный пункт.");
                     return;
             }
 
-            Console.WriteLine($"\nРезультаты поиска (найдено: {results.Count}):");
-            PrintProductTable(results);
+            Console.WriteLine("\nРезультаты поиска:");
+            PrintProducts(results);
         }
 
-        private static void PrintProductTable(IReadOnlyList<Product> products)
+        private static void PrintProducts(IReadOnlyList<Product> products)
         {
             if (products.Count == 0)
             {
-                Console.WriteLine("Список пуст.");
+                Console.WriteLine("Товары не найдены.");
                 return;
             }
 
-            Console.WriteLine(new string('-', 85));
-            Console.WriteLine($"{"ID",-5} | {"Название",-28} | {"Категория",-15} | {"Цена",-12} | {"На складе",-15}");
-            Console.WriteLine(new string('-', 85));
-
             foreach (var p in products)
             {
-                string stockText = p.IsInStock ? $"{p.Quantity} шт." : "Нет";
-                Console.WriteLine($"{p.Id,-5} | {p.Name,-28} | {p.Category,-15} | {p.Price,10:F2} ₽ | {stockText,-15}");
+                Console.WriteLine(p);
             }
-            Console.WriteLine(new string('-', 85));
+        }
+
+        private static void Pause()
+        {
+            Console.WriteLine("\nНажмите любую клавишу для возврата в меню...");
+            Console.ReadKey(true);
         }
 
         private static decimal ReadPositiveDecimal(string prompt)
@@ -371,7 +367,7 @@ namespace practice_2
                 Console.Write(prompt);
                 if (decimal.TryParse(Console.ReadLine(), out decimal value) && value > 0)
                     return value;
-                Console.WriteLine("Ошибка: введите положительное число.");
+                Console.WriteLine("Введите число больше 0.");
             }
         }
 
@@ -382,7 +378,7 @@ namespace practice_2
                 Console.Write(prompt);
                 if (int.TryParse(Console.ReadLine(), out int value) && value > 0)
                     return value;
-                Console.WriteLine("Ошибка: число должно быть целым и больше нуля.");
+                Console.WriteLine("Введите целое число больше 0.");
             }
         }
 
@@ -393,27 +389,35 @@ namespace practice_2
                 Console.Write(prompt);
                 if (int.TryParse(Console.ReadLine(), out int value) && value >= 0)
                     return value;
-                Console.WriteLine("Ошибка: количество не может быть отрицательным.");
+                Console.WriteLine("Количество не может быть меньше 0.");
             }
         }
 
         private static ProductCategory ChooseCategory()
         {
             var categories = (ProductCategory[])Enum.GetValues(typeof(ProductCategory));
-            Console.WriteLine("Выберите категорию:");
+            Console.WriteLine("Категории:");
             for (int i = 0; i < categories.Length; i++)
             {
-                Console.WriteLine($"{i + 1}. {categories[i]}");
+                string name = categories[i] switch
+                {
+                    ProductCategory.Electronics => "Электроника",
+                    ProductCategory.Groceries => "Продукты",
+                    ProductCategory.Clothing => "Одежда",
+                    ProductCategory.Books => "Книги",
+                    _ => categories[i].ToString()
+                };
+                Console.WriteLine($"{i + 1}. {name}");
             }
 
             while (true)
             {
-                Console.Write("Номер категории: ");
+                Console.Write("Выберите категорию (номер): ");
                 if (int.TryParse(Console.ReadLine(), out int num) && num >= 1 && num <= categories.Length)
                 {
                     return categories[num - 1];
                 }
-                Console.WriteLine("Ошибка: выберите существующий номер категории.");
+                Console.WriteLine("Неверный номер.");
             }
         }
     }
