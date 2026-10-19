@@ -14,14 +14,16 @@ namespace ConsoleApp2.GameLogic
         private readonly Dice _dice;
         private readonly ItemFactory _items;
         private readonly EnemyFactory _enemies;
+        private readonly SaveManager _saves;
 
         public Player Player { get; }
         public int Turn { get; private set; }
 
-        public Game(ConsoleUi ui, Dice dice, Player player, int turn)
+        public Game(ConsoleUi ui, Dice dice, SaveManager saves, Player player, int turn)
         {
             _ui = ui;
             _dice = dice;
+            _saves = saves;
             _items = new ItemFactory(dice);
             _enemies = new EnemyFactory(dice);
             Player = player;
@@ -50,14 +52,33 @@ namespace ConsoleApp2.GameLogic
         }
 
         /// <summary>Меню перед каждым ходом. Возвращает false, если выбран выход.</summary>
-        protected virtual bool BetweenTurnsMenu()
+        private bool BetweenTurnsMenu()
         {
             ShowStatus();
-            int choice = _ui.AskChoice("Что дальше?", "Идти дальше", "Выйти из игры");
-            return choice == 1;
+            while (true)
+            {
+                int choice = _ui.AskChoice("Что дальше?", "Идти дальше", "Сохранить игру", "Выйти из игры");
+                switch (choice)
+                {
+                    case 1:
+                        return true;
+                    case 2:
+                        if (_saves.TrySave(this, out string error))
+                        {
+                            _ui.Line("Игра сохранена.", ConsoleColor.Green);
+                        }
+                        else
+                        {
+                            _ui.Line($"Не удалось сохранить игру: {error}", ConsoleColor.Red);
+                        }
+                        break;
+                    default:
+                        return false;
+                }
+            }
         }
 
-        protected void ShowStatus()
+        private void ShowStatus()
         {
             _ui.Header($"Ход {Turn + 1}");
             _ui.Line($"Здоровье: {Player.Hp}/{Player.MaxHp} | Побеждено врагов: {Player.Kills}", ConsoleColor.White);
@@ -113,8 +134,9 @@ namespace ConsoleApp2.GameLogic
             }
         }
 
-        protected virtual void ShowGameOver()
+        private void ShowGameOver()
         {
+            _saves.Delete();
             _ui.Header("ВЫ ПОГИБЛИ");
             _ui.Line($"Пройдено ходов: {Turn}", ConsoleColor.White);
             _ui.Line($"Побеждено врагов: {Player.Kills}", ConsoleColor.White);
