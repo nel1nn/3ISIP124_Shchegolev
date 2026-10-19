@@ -2,7 +2,6 @@ using ConsoleApp2.Entities;
 
 namespace ConsoleApp2.Items
 {
-    /// <summary>Доспехи: определяют величину блока при защите.</summary>
     public class Armor : Equipment
     {
         public Armor(string name, Rarity rarity, int defense) : base(name, rarity, defense)

@@ -31,7 +31,6 @@ namespace ConsoleApp2
             }
         }
 
-        /// <summary>Главное меню: новая игра, загрузка или выход. Возвращает null при выходе.</summary>
         private static Game? CreateGame(ConsoleUi ui, SaveManager saves)
         {
             var dice = new Dice();

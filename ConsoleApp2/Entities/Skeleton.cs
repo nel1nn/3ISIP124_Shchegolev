@@ -1,6 +1,5 @@
 namespace ConsoleApp2.Entities
 {
-    /// <summary>Скелет: игнорирует защиту игрока.</summary>
     public class Skeleton : Enemy
     {
         public const int BaseHp = 35;

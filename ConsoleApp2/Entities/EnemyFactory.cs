@@ -2,7 +2,6 @@ using ConsoleApp2.Core;
 
 namespace ConsoleApp2.Entities
 {
-    /// <summary>Создаёт случайных врагов и боссов.</summary>
     public class EnemyFactory
     {
         private static readonly Func<Enemy>[] EnemyCreators =

@@ -3,7 +3,6 @@ using ConsoleApp2.Entities;
 
 namespace ConsoleApp2.GameLogic
 {
-    /// <summary>Пошаговый бой игрока с одним врагом. Игрок всегда ходит первым.</summary>
     public class Battle
     {
         private readonly Player _player;
@@ -19,7 +18,6 @@ namespace ConsoleApp2.GameLogic
             _ui = ui;
         }
 
-        /// <summary>Проводит бой до смерти одного из участников. Возвращает true, если игрок выжил.</summary>
         public bool Run()
         {
             _player.IsFrozen = false;

@@ -4,7 +4,6 @@ using ConsoleApp2.Items;
 
 namespace ConsoleApp2.GameLogic
 {
-    /// <summary>Главный игровой цикл: ходы, события, бои и сундуки.</summary>
     public class Game
     {
         public const int BossEveryTurns = 10;
@@ -30,7 +29,6 @@ namespace ConsoleApp2.GameLogic
             Turn = turn;
         }
 
-        /// <summary>Играет до смерти героя. Возвращает false, если игрок вышел из игры досрочно.</summary>
         public bool Run()
         {
             while (true)
@@ -51,7 +49,6 @@ namespace ConsoleApp2.GameLogic
             }
         }
 
-        /// <summary>Меню перед каждым ходом. Возвращает false, если выбран выход.</summary>
         private bool BetweenTurnsMenu()
         {
             ShowStatus();

@@ -5,7 +5,6 @@ using ConsoleApp2.Items;
 
 namespace ConsoleApp2.GameLogic
 {
-    /// <summary>Сохранение и загрузка прогресса в JSON-файл.</summary>
     public class SaveManager
     {
         private record EquipmentData(string Name, Rarity Rarity, int Power);
@@ -27,7 +26,6 @@ namespace ConsoleApp2.GameLogic
 
         public bool SaveExists => File.Exists(_path);
 
-        /// <summary>Сохраняет игру. Возвращает false, если записать файл не удалось.</summary>
         public bool TrySave(Game game, out string error)
         {
             var player = game.Player;
@@ -51,7 +49,6 @@ namespace ConsoleApp2.GameLogic
             }
         }
 
-        /// <summary>Загружает героя и номер хода. Возвращает false при отсутствии или порче файла.</summary>
         public bool TryLoad(out Player? player, out int turn, out string error)
         {
             player = null;
@@ -88,7 +85,6 @@ namespace ConsoleApp2.GameLogic
             }
             catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
             {
-                // Не удалось удалить старое сохранение — это не критично для игры.
             }
         }
 

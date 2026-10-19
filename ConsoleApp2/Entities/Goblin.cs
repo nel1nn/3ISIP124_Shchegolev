@@ -2,7 +2,6 @@ using ConsoleApp2.Core;
 
 namespace ConsoleApp2.Entities
 {
-    /// <summary>Гоблин: имеет шанс нанести критический урон.</summary>
     public class Goblin : Enemy
     {
         public const int BaseHp = 30;

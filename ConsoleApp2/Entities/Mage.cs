@@ -2,7 +2,6 @@ using ConsoleApp2.Core;
 
 namespace ConsoleApp2.Entities
 {
-    /// <summary>Маг: имеет шанс заморозить игрока (пропуск следующего хода).</summary>
     public class Mage : Enemy
     {
         public const int BaseHp = 25;

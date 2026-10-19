@@ -3,12 +3,10 @@ using ConsoleApp2.Entities;
 
 namespace ConsoleApp2.Items
 {
-    /// <summary>Экипировка (оружие или доспехи): имеет одну числовую характеристику.</summary>
     public abstract class Equipment : Item
     {
         public int Power { get; }
 
-        /// <summary>Название характеристики для вывода, например «Атака».</summary>
         public abstract string StatName { get; }
 
         protected Equipment(string name, Rarity rarity, int power) : base(name, rarity)
@@ -18,7 +16,6 @@ namespace ConsoleApp2.Items
 
         public override string Describe() => $"{base.Describe()} — {StatName}: {Power}";
 
-        /// <summary>Предмет того же вида, который сейчас надет на игроке.</summary>
         protected abstract Equipment GetEquipped(Player player);
 
         protected abstract void EquipTo(Player player);

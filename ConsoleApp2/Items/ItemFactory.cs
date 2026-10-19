@@ -2,7 +2,6 @@ using ConsoleApp2.Core;
 
 namespace ConsoleApp2.Items
 {
-    /// <summary>Создаёт случайные предметы для сундуков и наград.</summary>
     public class ItemFactory
     {
         private static readonly string[] WeaponNames = { "Меч", "Топор", "Кинжал", "Булава", "Копьё", "Секира" };
@@ -20,7 +19,6 @@ namespace ConsoleApp2.Items
             _dice = dice;
         }
 
-        /// <summary>Зелье, оружие или доспех — с равной вероятностью.</summary>
         public Item CreateRandom()
         {
             return _dice.Next(0, 2) switch
@@ -31,7 +29,6 @@ namespace ConsoleApp2.Items
             };
         }
 
-        /// <summary>Случайное оружие или доспех не ниже указанной редкости (награда за босса).</summary>
         public Equipment CreateEquipment(Rarity minRarity)
         {
             var rarity = RollRarity(minRarity);

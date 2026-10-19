@@ -2,7 +2,6 @@ using ConsoleApp2.Core;
 
 namespace ConsoleApp2.Entities
 {
-    /// <summary>ВВГ — босс расы Гоблин (сохраняет шанс крита, +10%).</summary>
     public class VvgBoss : Goblin
     {
         public VvgBoss() : base(
@@ -16,7 +15,6 @@ namespace ConsoleApp2.Entities
         }
     }
 
-    /// <summary>Ковальский — босс расы Скелет (полностью игнорирует защиту игрока).</summary>
     public class KovalskyBoss : Skeleton
     {
         public KovalskyBoss() : base(
@@ -29,7 +27,6 @@ namespace ConsoleApp2.Entities
         }
     }
 
-    /// <summary>Архимаг C++ — босс расы Маг (шанс заморозки +10%).</summary>
     public class ArchMageCppBoss : Mage
     {
         public ArchMageCppBoss() : base(
@@ -43,10 +40,6 @@ namespace ConsoleApp2.Entities
         }
     }
 
-    /// <summary>
-    /// Пестов С-- — босс расы Скелет: игнорирует защиту игрока
-    /// и дополнительно может заморозить (базовый шанс мага +15%).
-    /// </summary>
     public class PestovBoss : Skeleton
     {
         private const double FreezeChance = Mage.BaseFreezeChance + 0.15;

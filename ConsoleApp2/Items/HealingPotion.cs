@@ -3,7 +3,6 @@ using ConsoleApp2.Entities;
 
 namespace ConsoleApp2.Items
 {
-    /// <summary>Лечебное зелье: мгновенно полностью восстанавливает здоровье.</summary>
     public class HealingPotion : Item
     {
         public HealingPotion() : base("Лечебное зелье", Rarity.Common)

@@ -1,6 +1,5 @@
 namespace ConsoleApp2.Entities
 {
-    /// <summary>Базовый класс для всех существ, имеющих здоровье.</summary>
     public abstract class Character
     {
         public string Name { get; }

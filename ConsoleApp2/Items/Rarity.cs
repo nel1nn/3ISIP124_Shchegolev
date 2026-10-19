@@ -1,6 +1,5 @@
 namespace ConsoleApp2.Items
 {
-    /// <summary>Редкость предмета.</summary>
     public enum Rarity
     {
         Common,
@@ -20,7 +19,6 @@ namespace ConsoleApp2.Items
             _ => "Неизвестная"
         };
 
-        /// <summary>Множитель характеристик предмета данной редкости.</summary>
         public static double Multiplier(this Rarity rarity) => rarity switch
         {
             Rarity.Common => 1.0,
@@ -30,7 +28,6 @@ namespace ConsoleApp2.Items
             _ => 1.0
         };
 
-        /// <summary>Вес при выпадении: чем выше редкость, тем меньше вес.</summary>
         public static int DropWeight(this Rarity rarity) => rarity switch
         {
             Rarity.Common => 60,

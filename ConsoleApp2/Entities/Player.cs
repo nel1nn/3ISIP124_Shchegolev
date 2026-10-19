@@ -14,10 +14,8 @@ namespace ConsoleApp2.Entities
         public Armor Armor { get; private set; }
         public int Kills { get; set; }
 
-        /// <summary>Игрок выбрал «Защиту» в этом раунде.</summary>
         public bool IsDefending { get; private set; }
 
-        /// <summary>Игрок заморожен и пропустит следующий ход.</summary>
         public bool IsFrozen { get; set; }
 
         public Player() : this(
@@ -46,13 +44,8 @@ namespace ConsoleApp2.Entities
 
         public void StopDefending() => IsDefending = false;
 
-        /// <summary>Урон по врагу: атака оружия минус защита врага, но не меньше 1.</summary>
         public int CalculateDamageTo(Enemy enemy) => Math.Max(1, Weapon.Power - enemy.Defense);
 
-        /// <summary>
-        /// Принимает удар врага. Если игрок защищается — 40% полного уклонения,
-        /// иначе блок на 70–100% значения защиты доспехов (если враг не игнорирует броню).
-        /// </summary>
         public void ReceiveHit(int rawDamage, bool ignoreArmor, Dice dice, AttackReport report)
         {
             report.RawDamage = rawDamage;
