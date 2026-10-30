@@ -7,7 +7,6 @@ namespace Marketplace;
 
 internal class Program
 {
-    // Текущий вошедший пользователь. null означает гостя
     private static User? _currentUser;
 
     private static MarketplaceContext _context = null!;
@@ -17,11 +16,7 @@ internal class Program
 
     static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
-        Console.InputEncoding = Encoding.UTF8;
-
         _context = new MarketplaceContext();
-        // Создаёт файл базы и таблицы при первом запуске, заполняет начальными данными
         _context.Database.EnsureCreated();
 
         _authService = new AuthService(_context);
@@ -37,17 +32,22 @@ internal class Program
         Console.WriteLine("До свидания!");
     }
 
-    // Меню гостя. Возвращает false, если нужно выйти из программы
     private static bool ShowGuestMenu()
     {
-        Console.WriteLine();
-        Console.WriteLine("=== GMWOG||GG.MOW||WONGG: маркетплейс ===");
+        Console.ForegroundColor = ConsoleColor.DarkBlue;
+        Console.Write("OZO");
+        Console.ForegroundColor = ConsoleColor.DarkMagenta;
+        Console.WriteLine("LDBERIS\n");
+        Console.ResetColor();
         Console.WriteLine("1. Посмотреть товары");
         Console.WriteLine("2. Регистрация");
         Console.WriteLine("3. Войти");
         Console.WriteLine("0. Выход");
 
-        switch (ReadLine("Выберите пункт: "))
+        string choice = ReadLine("Выберите пункт: ");
+        Console.Clear();
+
+        switch (choice)
         {
             case "1": ShowProducts(); break;
             case "2": Register(); break;
@@ -56,10 +56,10 @@ internal class Program
             default: Console.WriteLine("Нет такого пункта меню."); break;
         }
 
+        WaitAndClear();
         return true;
     }
 
-    // Меню авторизованного пользователя
     private static bool ShowUserMenu()
     {
         Console.WriteLine();
@@ -75,7 +75,10 @@ internal class Program
         Console.WriteLine("9. Выйти из аккаунта");
         Console.WriteLine("0. Выход из программы");
 
-        switch (ReadLine("Выберите пункт: "))
+        string choice = ReadLine("Выберите пункт: ");
+        Console.Clear();
+
+        switch (choice)
         {
             case "1": ShowProducts(); break;
             case "2": AddToCart(); break;
@@ -93,10 +96,9 @@ internal class Program
             default: Console.WriteLine("Нет такого пункта меню."); break;
         }
 
+        WaitAndClear();
         return true;
     }
-
-    // ---------- Регистрация и вход ----------
 
     private static void Register()
     {
@@ -134,8 +136,6 @@ internal class Program
         _currentUser = user;
         Console.WriteLine("Вы успешно вошли в аккаунт.");
     }
-
-    // ---------- Товары и корзина ----------
 
     private static void ShowProducts()
     {
@@ -198,9 +198,6 @@ internal class Program
         Console.WriteLine(removed ? "Товар удалён из корзины." : "Этого товара нет в корзине.");
     }
 
-    // ---------- Покупки ----------
-
-    // Показывает ПВЗ и возвращает выбранный номер (null, если ввод неверный)
     private static int? ChoosePickupPoint()
     {
         Console.WriteLine("--- Выберите пункт выдачи ---");
@@ -267,8 +264,6 @@ internal class Program
             : $"Ошибка: {error}");
     }
 
-    // ---------- История заказов ----------
-
     private static void ShowOrders()
     {
         Console.WriteLine("Сортировка по дате: 1 - сначала новые, 2 - сначала старые");
@@ -306,16 +301,20 @@ internal class Program
         }
     }
 
-    // ---------- Вспомогательные методы ввода ----------
+    private static void WaitAndClear()
+    {
+        Console.WriteLine();
+        Console.Write("Нажмите Enter, чтобы продолжить...");
+        Console.ReadLine();
+        Console.Clear();
+    }
 
-    // Читает строку, никогда не возвращает null
     private static string ReadLine(string prompt)
     {
         Console.Write(prompt);
         return Console.ReadLine() ?? string.Empty;
     }
 
-    // Читает целое число. При неверном вводе пишет сообщение и возвращает null
     private static int? ReadInt(string prompt)
     {
         string input = ReadLine(prompt);
